@@ -68,6 +68,22 @@ export default function Interactions() {
       return { tab, handler };
     });
 
+    // Tabs del torneo (por fase) — set independiente de las de camadas, para
+    // no desactivarse entre sí si ambas secciones están en la misma página.
+    const torneoTabs = Array.from(document.querySelectorAll<HTMLElement>(".torneo-tab"));
+    const torneoPanels = Array.from(document.querySelectorAll<HTMLElement>(".torneo-fase-panel"));
+    const torneoTabHandlers = torneoTabs.map((tab) => {
+      const handler = () => {
+        torneoTabs.forEach((t) => t.classList.remove("active"));
+        torneoPanels.forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        const fase = tab.dataset.fase;
+        torneoPanels.find((p) => p.dataset.fasePanel === fase)?.classList.add("active");
+      };
+      tab.addEventListener("click", handler);
+      return { tab, handler };
+    });
+
     const lb = document.getElementById("lightbox");
     const lbImg = document.getElementById("lightboxImg") as HTMLImageElement | null;
     const lbVideo = document.getElementById("lightboxVideo") as HTMLVideoElement | null;
@@ -112,6 +128,7 @@ export default function Interactions() {
       document.removeEventListener("scroll", onScroll);
       dotClickHandlers.forEach(({ d, handler }) => d.removeEventListener("click", handler));
       tabHandlers.forEach(({ tab, handler }) => tab.removeEventListener("click", handler));
+      torneoTabHandlers.forEach(({ tab, handler }) => tab.removeEventListener("click", handler));
       mediaHandlers.forEach(({ el, handler }) => el.removeEventListener("click", handler));
       closeBtn?.removeEventListener("click", closeLightbox);
       lb?.removeEventListener("click", bgHandler as any);

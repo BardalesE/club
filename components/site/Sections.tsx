@@ -116,9 +116,28 @@ export function Torneo({ torneoEquipos, torneoPartidos }: Pick<ClubContent, "tor
           <div className="eyebrow">🏆 Torneo aniversario</div>
           <h2>Así se juega hoy</h2>
         </div>
-        {fases.map((fase) => (
-          <div key={fase} className="torneo-fase reveal">
-            <h3>{fase}</h3>
+
+        {fases.length > 1 ? (
+          <div className="torneo-tabs reveal">
+            {fases.map((fase, i) => (
+              <button
+                key={fase}
+                className={`torneo-tab${i === fases.length - 1 ? " active" : ""}`}
+                data-fase={fase}
+              >
+                {fase}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        {fases.map((fase, i) => (
+          <div
+            key={fase}
+            className={`torneo-fase-panel reveal${i === fases.length - 1 ? " active" : ""}`}
+            data-fase-panel={fase}
+          >
+            {fases.length === 1 ? <h3 className="torneo-fase-titulo">{fase}</h3> : null}
             <div className="torneo-grid">
               {torneoPartidos
                 .filter((p) => p.fase === fase)
