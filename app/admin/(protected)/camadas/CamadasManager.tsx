@@ -135,15 +135,15 @@ function CamadaCard({ camada, onDeleted }: { camada: Camada; onDeleted: () => vo
             </li>
           ))}
         </ul>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <input
-            className={inputCls}
+            className={`${inputCls} min-w-0 flex-1 basis-40`}
             placeholder="Nombre del jugador"
             value={nuevoJugador}
             onChange={(e) => setNuevoJugador(e.target.value)}
           />
           <input
-            className={`${inputCls} max-w-[140px]`}
+            className={`${inputCls} min-w-0 w-28`}
             placeholder="Rol (opcional)"
             value={nuevoRol}
             onChange={(e) => setNuevoRol(e.target.value)}

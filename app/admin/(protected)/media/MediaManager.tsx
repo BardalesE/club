@@ -38,12 +38,12 @@ export default function MediaManager({
 
   return (
     <div>
-      <div className="flex gap-2 mb-5 border-b border-neutral-200">
+      <div className="flex gap-2 mb-5 border-b border-neutral-200 overflow-x-auto">
         {SECCIONES.map((s) => (
           <button
             key={s.key}
             onClick={() => setActive(s.key)}
-            className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px ${
+            className={`shrink-0 whitespace-nowrap px-4 py-2 text-sm font-semibold border-b-2 -mb-px ${
               active === s.key ? "border-pink-600 text-pink-600" : "border-transparent text-neutral-500"
             }`}
           >

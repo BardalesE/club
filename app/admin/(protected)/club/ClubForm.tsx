@@ -86,7 +86,7 @@ export default function ClubForm({ initial }: { initial: Club }) {
         <Field label="Foto/video de fondo del hero">
           <MediaPicker value={form.hero_bg_url} onChange={(url) => set("hero_bg_url", url)} folder="hero" />
         </Field>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Field label="Título — parte 1">
             <input className={inputCls} value={form.hero_titulo_pre || ""} onChange={(e) => set("hero_titulo_pre", e.target.value)} />
           </Field>

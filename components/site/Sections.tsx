@@ -1,10 +1,18 @@
 import type { ClubContent } from "@/lib/types";
+import MobileMenuToggle from "@/components/site/MobileMenuToggle";
 
 function fmtFecha(iso: string | null) {
   if (!iso) return "";
   const d = new Date(iso + "T00:00:00");
   return d.toLocaleDateString("es-PE", { day: "numeric", month: "short", year: "numeric" }).toUpperCase();
 }
+
+const NAV_LINKS = [
+  { href: "#fundacion", label: "Fundación" },
+  { href: "#camadas", label: "Camadas" },
+  { href: "#mistica", label: "Mística" },
+  { href: "#galeria", label: "Galería" },
+];
 
 export function TopNav({ club }: { club: ClubContent["club"] }) {
   return (
@@ -14,11 +22,13 @@ export function TopNav({ club }: { club: ClubContent["club"] }) {
         {club.nombre}
       </div>
       <nav>
-        <a href="#fundacion">Fundación</a>
-        <a href="#camadas">Camadas</a>
-        <a href="#mistica">Mística</a>
-        <a href="#galeria">Galería</a>
+        {NAV_LINKS.map((l) => (
+          <a key={l.href} href={l.href}>
+            {l.label}
+          </a>
+        ))}
       </nav>
+      <MobileMenuToggle links={NAV_LINKS} />
     </div>
   );
 }

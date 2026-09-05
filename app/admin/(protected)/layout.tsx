@@ -12,9 +12,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!user) redirect("/admin/login");
 
   return (
-    <div className="min-h-screen bg-neutral-100 flex">
+    <div className="min-h-screen bg-neutral-100 flex flex-col md:flex-row">
       <AdminNav email={user.email || ""} />
-      <main className="flex-1 p-8 max-w-4xl">{children}</main>
+      <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 max-w-4xl">{children}</main>
     </div>
   );
 }
