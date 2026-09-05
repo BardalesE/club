@@ -53,7 +53,12 @@ export function Hero({ club }: { club: ClubContent["club"] }) {
     <header className="hero">
       <div className="hero-bg">
         {club.hero_bg_url ? (
-          <img src={club.hero_bg_url} alt={`Plantel de ${club.nombre}`} />
+          <img
+            src={club.hero_bg_url}
+            alt={`Plantel de ${club.nombre}`}
+            className="lightbox-trigger"
+            data-lightbox={club.hero_bg_url}
+          />
         ) : null}
       </div>
       {club.escudo_url ? (
@@ -195,7 +200,12 @@ export function Fundacion({ club, founders }: Pick<ClubContent, "club" | "founde
           </div>
           <figure className="fund-photo reveal">
             {club.fundacion_foto_url ? (
-              <img src={club.fundacion_foto_url} alt="Fundadores del club" />
+              <img
+                src={club.fundacion_foto_url}
+                alt="Fundadores del club"
+                className="lightbox-trigger"
+                data-lightbox={club.fundacion_foto_url}
+              />
             ) : null}
             {club.fundacion_foto_caption ? <figcaption>{club.fundacion_foto_caption}</figcaption> : null}
           </figure>
@@ -219,7 +229,11 @@ export function Kits({ club, kits }: Pick<ClubContent, "club" | "kits">) {
           {kits.map((k) => (
             <div className="kit-card" key={k.id}>
               <div className="swatch" style={{ background: k.color_hex || "#999" }} />
-              <div className="kimg">{k.imagen_url ? <img src={k.imagen_url} alt={k.nombre} /> : null}</div>
+              <div className="kimg">
+                {k.imagen_url ? (
+                  <img src={k.imagen_url} alt={k.nombre} className="lightbox-trigger" data-lightbox={k.imagen_url} />
+                ) : null}
+              </div>
               <div className="kbody">
                 <div className="kyear">{k.anio}</div>
                 <h4>{k.nombre}</h4>
@@ -252,7 +266,11 @@ export function Camadas({ club, camadas }: Pick<ClubContent, "club" | "camadas">
         </div>
         {camadas.map((c, i) => (
           <div key={c.id} className={`camada-panel reveal${i === 0 ? " active" : ""}`} id={`c-${c.id}`}>
-            <div className="camada-photo">{c.imagen_url ? <img src={c.imagen_url} alt={c.nombre} /> : null}</div>
+            <div className="camada-photo">
+              {c.imagen_url ? (
+                <img src={c.imagen_url} alt={c.nombre} className="lightbox-trigger" data-lightbox={c.imagen_url} />
+              ) : null}
+            </div>
             <div className="camada-info">
               <h3>{c.emoji} {c.nombre}</h3>
               {c.descripcion ? <p className="desc">{c.descripcion}</p> : null}
@@ -286,7 +304,11 @@ export function Mistica({
           <div className="anecdotas reveal">
             {anecdotas.map((a) => (
               <article className="anecdota" key={a.id}>
-                <div className="aimg">{a.imagen_url ? <img src={a.imagen_url} alt={a.titulo} /> : null}</div>
+                <div className="aimg">
+                  {a.imagen_url ? (
+                    <img src={a.imagen_url} alt={a.titulo} className="lightbox-trigger" data-lightbox={a.imagen_url} />
+                  ) : null}
+                </div>
                 <div className="abody">
                   {a.tag ? <div className="tag">{a.tag}</div> : null}
                   <h3>{a.titulo}</h3>
@@ -305,9 +327,24 @@ export function Mistica({
               <div className="strip-row">
                 {hermandad.map((m) =>
                   m.tipo === "video" ? (
-                    <video key={m.id} src={m.url} muted loop playsInline />
+                    <video
+                      key={m.id}
+                      src={m.url}
+                      muted
+                      loop
+                      playsInline
+                      className="lightbox-trigger"
+                      data-lightbox={m.url}
+                      data-lightbox-type="video"
+                    />
                   ) : (
-                    <img key={m.id} src={m.url} alt={m.caption || "Comunidad del club"} />
+                    <img
+                      key={m.id}
+                      src={m.url}
+                      alt={m.caption || "Comunidad del club"}
+                      className="lightbox-trigger"
+                      data-lightbox={m.url}
+                    />
                   )
                 )}
               </div>
@@ -407,7 +444,16 @@ export function Testimonios({ testimonios }: Pick<ClubContent, "testimonios">) {
         <div className="testimonios-grid reveal">
           {testimonios.map((t) => (
             <div className="testimonio-card" key={t.id}>
-              {t.tipo === "video" ? <video src={t.url} controls /> : <img src={t.url} alt={t.autor || "Testimonio"} />}
+              {t.tipo === "video" ? (
+                <video src={t.url} controls />
+              ) : (
+                <img
+                  src={t.url}
+                  alt={t.autor || "Testimonio"}
+                  className="lightbox-trigger"
+                  data-lightbox={t.url}
+                />
+              )}
               {t.caption ? <p>&quot;{t.caption}&quot;</p> : null}
               {t.autor ? <div className="autor">{t.autor}</div> : null}
             </div>
