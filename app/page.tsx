@@ -16,6 +16,7 @@ import {
   SiteFooter,
   Testimonios,
   TopNav,
+  Torneo,
 } from "@/components/site/Sections";
 
 export const revalidate = 0; // siempre fresco: el admin publica y se ve al instante
@@ -38,8 +39,9 @@ export default async function HomePage() {
     <div className="site">
       <div className="grain" />
       <Rail />
-      <TopNav club={club} />
+      <TopNav club={club} showTorneo={content.torneoPartidos.length > 0} />
       <Hero club={club} />
+      <Torneo torneoEquipos={content.torneoEquipos} torneoPartidos={content.torneoPartidos} />
       <Fundacion club={club} founders={content.founders} />
       <Kits club={club} kits={content.kits} />
       <Camadas club={club} camadas={content.camadas} />

@@ -186,9 +186,9 @@ function SeccionPanel({
             <div key={item.id} className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
               <div className="aspect-video bg-neutral-100">
                 {item.tipo === "video" ? (
-                  <video src={item.url} controls className="w-full h-full object-cover" />
+                  <video src={item.url} controls className="w-full h-full object-contain" />
                 ) : (
-                  <img src={item.url} alt={item.caption || ""} className="w-full h-full object-cover" />
+                  <img src={item.url} alt={item.caption || ""} className="w-full h-full object-contain" />
                 )}
               </div>
               <div className="p-3 space-y-2">

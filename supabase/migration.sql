@@ -129,6 +129,33 @@ create table if not exists media_gallery (
   created_at timestamptz not null default now()
 );
 
+-- ---------- TORNEO ANIVERSARIO — eliminación directa (equipos + partidos) ----------
+-- El admin va cargando resultado por resultado a medida que se juegan;
+-- "fase" es texto libre (Octavos, Cuartos, Semifinal, Final, 3er puesto...)
+-- para no atarnos a un tamaño de bracket fijo.
+create table if not exists torneo_equipos (
+  id uuid primary key default gen_random_uuid(),
+  club_slug text not null references club(slug) on delete cascade,
+  nombre text not null,
+  emoji text,          -- bandera/ícono simple (ej. 🔵 o una inicial) — rápido de poner desde el celular
+  escudo_url text,     -- opcional: foto/escudo real vía MediaPicker
+  orden int not null default 0
+);
+
+create table if not exists torneo_partidos (
+  id uuid primary key default gen_random_uuid(),
+  club_slug text not null references club(slug) on delete cascade,
+  fase text not null,
+  fecha date,
+  equipo_local_id uuid references torneo_equipos(id) on delete set null,
+  equipo_visitante_id uuid references torneo_equipos(id) on delete set null,
+  goles_local int,
+  goles_visitante int,
+  estado text not null default 'programado' check (estado in ('programado','en_vivo','finalizado')),
+  orden int not null default 0,
+  created_at timestamptz not null default now()
+);
+
 -- ============================================================
 -- RLS: lectura pública, escritura solo admin autenticado
 -- ============================================================
@@ -142,11 +169,13 @@ alter table rivales enable row level security;
 alter table stats_hitos enable row level security;
 alter table memoria enable row level security;
 alter table media_gallery enable row level security;
+alter table torneo_equipos enable row level security;
+alter table torneo_partidos enable row level security;
 
 do $$
 declare t text;
 begin
-  for t in select unnest(array['club','founders','kits','camadas','camada_jugadores','anecdotas','rivales','stats_hitos','memoria','media_gallery'])
+  for t in select unnest(array['club','founders','kits','camadas','camada_jugadores','anecdotas','rivales','stats_hitos','memoria','media_gallery','torneo_equipos','torneo_partidos'])
   loop
     execute format('drop policy if exists "public read" on %I', t);
     execute format('create policy "public read" on %I for select using (true)', t);

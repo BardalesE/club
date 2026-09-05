@@ -20,6 +20,8 @@ export async function getClubContent(): Promise<ClubContent | null> {
     statsRes,
     memoriaRes,
     mediaRes,
+    torneoEquiposRes,
+    torneoPartidosRes,
   ] = await Promise.all([
     supabase.from("club").select("*").eq("slug", CLUB_SLUG).maybeSingle(),
     supabase.from("founders").select("*").eq("club_slug", CLUB_SLUG).order("orden"),
@@ -34,6 +36,8 @@ export async function getClubContent(): Promise<ClubContent | null> {
     supabase.from("stats_hitos").select("*").eq("club_slug", CLUB_SLUG).order("orden"),
     supabase.from("memoria").select("*").eq("club_slug", CLUB_SLUG).order("orden"),
     supabase.from("media_gallery").select("*").eq("club_slug", CLUB_SLUG).order("orden"),
+    supabase.from("torneo_equipos").select("*").eq("club_slug", CLUB_SLUG).order("orden"),
+    supabase.from("torneo_partidos").select("*").eq("club_slug", CLUB_SLUG).order("orden"),
   ]);
 
   if (!clubRes.data) return null;
@@ -59,5 +63,7 @@ export async function getClubContent(): Promise<ClubContent | null> {
     hermandad: bySeccion("hermandad"),
     galeria: bySeccion("galeria"),
     testimonios: bySeccion("testimonios"),
+    torneoEquipos: torneoEquiposRes.data ?? [],
+    torneoPartidos: torneoPartidosRes.data ?? [],
   };
 }

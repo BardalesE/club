@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default async function AdminDashboard() {
   const supabase = createClient();
-  const [founders, kits, camadas, anecdotas, rivales, memoria, media] = await Promise.all([
+  const [founders, kits, camadas, anecdotas, rivales, memoria, media, torneoPartidos] = await Promise.all([
     supabase.from("founders").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
     supabase.from("kits").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
     supabase.from("camadas").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
@@ -12,10 +12,12 @@ export default async function AdminDashboard() {
     supabase.from("rivales").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
     supabase.from("memoria").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
     supabase.from("media_gallery").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
+    supabase.from("torneo_partidos").select("id", { count: "exact", head: true }).eq("club_slug", CLUB_SLUG),
   ]);
 
   const cards = [
     { label: "Fotos y videos", href: "/admin/media", count: media.count ?? 0 },
+    { label: "🏆 Torneo aniversario", href: "/admin/torneo", count: torneoPartidos.count ?? 0 },
     { label: "Fundadores", href: "/admin/founders", count: founders.count ?? 0 },
     { label: "Camisetas", href: "/admin/kits", count: kits.count ?? 0 },
     { label: "Camadas", href: "/admin/camadas", count: camadas.count ?? 0 },

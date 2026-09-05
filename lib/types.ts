@@ -108,6 +108,28 @@ export type MediaItem = {
   orden: number;
 };
 
+export type TorneoEquipo = {
+  id: string;
+  nombre: string;
+  emoji: string | null;
+  escudo_url: string | null;
+  orden: number;
+};
+
+export type TorneoEstado = "programado" | "en_vivo" | "finalizado";
+
+export type TorneoPartido = {
+  id: string;
+  fase: string;
+  fecha: string | null;
+  equipo_local_id: string | null;
+  equipo_visitante_id: string | null;
+  goles_local: number | null;
+  goles_visitante: number | null;
+  estado: TorneoEstado;
+  orden: number;
+};
+
 export type ClubContent = {
   club: Club;
   founders: Founder[];
@@ -120,4 +142,6 @@ export type ClubContent = {
   hermandad: MediaItem[];
   galeria: MediaItem[];
   testimonios: MediaItem[];
+  torneoEquipos: TorneoEquipo[];
+  torneoPartidos: TorneoPartido[];
 };

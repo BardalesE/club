@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 const links = [
   { href: "/admin", label: "Resumen" },
   { href: "/admin/media", label: "Fotos y videos" },
+  { href: "/admin/torneo", label: "🏆 Torneo aniversario" },
   { href: "/admin/club", label: "Club, hero y textos" },
   { href: "/admin/founders", label: "Fundadores" },
   { href: "/admin/kits", label: "Camisetas" },
@@ -65,49 +66,38 @@ export default function AdminNav({ email }: { email: string }) {
   return (
     <>
       {/* Barra superior — solo móvil/tablet */}
-      <div className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-neutral-900 text-neutral-100 px-4 py-3">
-        <div>
-          <div className="font-bold text-sm">Panel del club</div>
-          <div className="text-[11px] text-neutral-400 truncate max-w-[220px]">{email}</div>
-        </div>
-        <button
-          onClick={() => setOpen(true)}
-          aria-label="Abrir menú"
-          className="p-2 -mr-2 shrink-0"
-        >
-          <span className="block w-6 h-0.5 bg-white mb-1.5" />
-          <span className="block w-6 h-0.5 bg-white mb-1.5" />
-          <span className="block w-6 h-0.5 bg-white" />
-        </button>
-      </div>
-
-      {/* Cajón deslizable — solo móvil/tablet, cuando está abierto */}
-      {open ? (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="w-72 max-w-[80vw] bg-neutral-900 text-neutral-100 h-full flex flex-col">
-            <div className="px-5 py-5 border-b border-neutral-800 flex items-start justify-between shrink-0">
-              <div>
-                <div className="font-bold text-sm">Panel del club</div>
-                <div className="text-xs text-neutral-400 mt-1 truncate">{email}</div>
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Cerrar menú"
-                className="text-neutral-400 text-2xl leading-none px-1"
-              >
-                ×
-              </button>
-            </div>
-            {navLinks(() => setOpen(false))}
-            {footer}
+      <div className="md:hidden sticky top-0 z-40 relative">
+        <div className="flex items-center justify-between bg-neutral-900 text-neutral-100 px-4 py-3">
+          <div>
+            <div className="font-bold text-sm">Panel del club</div>
+            <div className="text-[11px] text-neutral-400 truncate max-w-[220px]">{email}</div>
           </div>
           <button
-            aria-label="Cerrar menú"
-            onClick={() => setOpen(false)}
-            className="flex-1 bg-black/60"
-          />
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={open}
+            className="p-2 -mr-2 shrink-0 text-lg leading-none"
+          >
+            {open ? "✕" : "☰"}
+          </button>
         </div>
-      ) : null}
+
+        {/* Desplegable compacto — no tapa la página, solo cuelga debajo de la barra */}
+        {open ? (
+          <>
+            <button
+              aria-label="Cerrar menú"
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 z-40 cursor-default"
+              style={{ background: "transparent" }}
+            />
+            <div className="absolute left-0 right-0 top-full z-50 max-h-[70vh] overflow-y-auto bg-neutral-900 text-neutral-100 shadow-xl border-t border-neutral-800">
+              {navLinks(() => setOpen(false))}
+              {footer}
+            </div>
+          </>
+        ) : null}
+      </div>
 
       {/* Sidebar fija — solo desktop (md+) */}
       <aside className="hidden md:flex w-64 shrink-0 bg-neutral-900 text-neutral-100 min-h-screen flex-col">

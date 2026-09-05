@@ -14,7 +14,8 @@ const NAV_LINKS = [
   { href: "#galeria", label: "Galería" },
 ];
 
-export function TopNav({ club }: { club: ClubContent["club"] }) {
+export function TopNav({ club, showTorneo }: { club: ClubContent["club"]; showTorneo?: boolean }) {
+  const links = showTorneo ? [{ href: "#torneo", label: "🏆 Torneo" }, ...NAV_LINKS] : NAV_LINKS;
   return (
     <div className="topnav">
       <div className="brand">
@@ -22,13 +23,13 @@ export function TopNav({ club }: { club: ClubContent["club"] }) {
         {club.nombre}
       </div>
       <nav>
-        {NAV_LINKS.map((l) => (
+        {links.map((l) => (
           <a key={l.href} href={l.href}>
             {l.label}
           </a>
         ))}
       </nav>
-      <MobileMenuToggle links={NAV_LINKS} />
+      <MobileMenuToggle links={links} />
     </div>
   );
 }
@@ -79,6 +80,77 @@ export function Hero({ club }: { club: ClubContent["club"] }) {
       </div>
       <div className="hero-scroll">Desliza</div>
     </header>
+  );
+}
+
+/**
+ * Torneo del aniversario — eliminación directa. El admin va agregando
+ * partido a partido con el resultado a medida que se juegan (ver
+ * /admin/torneo); acá solo agrupamos por fase y mostramos el marcador.
+ * Se oculta por completo si todavía no hay partidos cargados.
+ */
+export function Torneo({ torneoEquipos, torneoPartidos }: Pick<ClubContent, "torneoEquipos" | "torneoPartidos">) {
+  if (!torneoPartidos.length) return null;
+  const equiposPorId = new Map(torneoEquipos.map((e) => [e.id, e]));
+
+  const fases: string[] = [];
+  torneoPartidos.forEach((p) => {
+    if (!fases.includes(p.fase)) fases.push(p.fase);
+  });
+
+  const estadoLabel: Record<string, string> = {
+    programado: "Programado",
+    en_vivo: "En vivo",
+    finalizado: "Fin",
+  };
+
+  return (
+    <section className="torneo" id="torneo">
+      <div className="wrap">
+        <div className="section-head reveal">
+          <div className="eyebrow">🏆 Torneo aniversario</div>
+          <h2>Así se juega hoy</h2>
+        </div>
+        {fases.map((fase) => (
+          <div key={fase} className="torneo-fase reveal">
+            <h3>{fase}</h3>
+            <div className="torneo-grid">
+              {torneoPartidos
+                .filter((p) => p.fase === fase)
+                .map((p) => {
+                  const local = p.equipo_local_id ? equiposPorId.get(p.equipo_local_id) : undefined;
+                  const visitante = p.equipo_visitante_id ? equiposPorId.get(p.equipo_visitante_id) : undefined;
+                  const jugado = p.estado === "finalizado" && p.goles_local != null && p.goles_visitante != null;
+                  const ganaLocal = jugado && p.goles_local! > p.goles_visitante!;
+                  const ganaVisitante = jugado && p.goles_visitante! > p.goles_local!;
+                  return (
+                    <div key={p.id} className={`torneo-card torneo-${p.estado}`}>
+                      <div className="torneo-card-top">
+                        <span>{fmtFecha(p.fecha)}</span>
+                        <span className={`torneo-badge torneo-badge-${p.estado}`}>{estadoLabel[p.estado]}</span>
+                      </div>
+                      <div className={`torneo-equipo${ganaLocal ? " gana" : ""}`}>
+                        <span className="torneo-nombre">
+                          {local?.emoji ? <span className="torneo-emoji">{local.emoji}</span> : null}
+                          {local?.nombre ?? "Por definir"}
+                        </span>
+                        <span className="torneo-gol">{p.goles_local ?? "–"}</span>
+                      </div>
+                      <div className={`torneo-equipo${ganaVisitante ? " gana" : ""}`}>
+                        <span className="torneo-nombre">
+                          {visitante?.emoji ? <span className="torneo-emoji">{visitante.emoji}</span> : null}
+                          {visitante?.nombre ?? "Por definir"}
+                        </span>
+                        <span className="torneo-gol">{p.goles_visitante ?? "–"}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
